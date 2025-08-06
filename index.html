@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<title>ブラックレインボー＆ベンチマーク</title>
+<title>ブラックレインボー＆ベンチマーク（自動実行版）</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
   body {
@@ -68,25 +67,8 @@
   .benchmark {
     font-size: 1.4em;
     font-weight: bold;
-    text-shadow: 0 0 5px #00ffcc;
     white-space: pre-line;
-  }
-
-  button {
-    padding: 0.7em 1.5em;
-    font-size: 1em;
-    background: linear-gradient(45deg, #00ffcc, #0066ff);
-    border: none;
-    border-radius: 8px;
-    color: black;
-    cursor: pointer;
-    box-shadow: 0 0 10px #00ffcc;
-    transition: background 0.3s ease;
-  }
-
-  button:hover {
-    background: linear-gradient(45deg, #00ccaa, #0044cc);
-    color: white;
+    text-shadow: 0 0 5px #00ffcc;
   }
 </style>
 </head>
@@ -95,7 +77,7 @@
 <div class="rainbow-bg"></div>
 
 <div class="content">
-  <h1>ブラックレインボー＆ベンチマーク</h1>
+  <h1>ブラックレインボー＆ベンチマーク（自動実行版）</h1>
   <div class="specs">
     <p><strong>ユーザーエージェント:</strong> <span id="ua"></span></p>
     <p><strong>プラットフォーム:</strong> <span id="platform"></span></p>
@@ -105,8 +87,7 @@
     <p><strong>GPU情報:</strong> <span id="gpu"></span></p>
   </div>
 
-  <button id="runBench">ベンチマーク実行</button>
-  <p class="benchmark" id="benchmarkResult">ベンチマーク結果をここに表示</p>
+  <p class="benchmark" id="benchmarkResult">ベンチマーク結果を計測中…</p>
 </div>
 
 <script>
@@ -132,7 +113,8 @@
     const start = performance.now();
     let count = 0;
 
-    for(let i = 0; i < 1000000; i++) {
+    // 高負荷計算（1000万回ループ）
+    for(let i = 0; i < 10000000; i++) {
       count += i;
     }
 
@@ -140,17 +122,21 @@
     const duration = end - start;
 
     let rank = '';
-    if (duration <= 10) rank = 'Sランク（超速！）';
-    else if (duration <= 30) rank = 'Aランク（かなり速い）';
-    else if (duration <= 60) rank = 'Bランク（普通）';
-    else if (duration <= 100) rank = 'Cランク（やや遅め）';
-    else rank = 'Dランク（遅い）';
+    if (duration <= 50) rank = 'Sランク（超高速！）';
+    else if (duration <= 100) rank = 'Aランク（かなり速い）';
+    else if (duration <= 200) rank = 'Bランク（普通）';
+    else if (duration <= 400) rank = 'Cランク（やや遅め）';
+    else if (duration <= 800) rank = 'Dランク（遅い）';
+    else rank = 'Eランク（かなり遅い）';
 
     document.getElementById('benchmarkResult').textContent = 
       `処理時間: ${duration.toFixed(2)} ms\nランク: ${rank}`;
   }
 
-  document.getElementById('runBench').addEventListener('click', runBenchmark);
+  // ページ読み込み時に自動実行
+  window.addEventListener('load', () => {
+    runBenchmark();
+  });
 </script>
 
 </body>
